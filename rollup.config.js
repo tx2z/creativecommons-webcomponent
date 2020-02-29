@@ -114,8 +114,8 @@ const components = glob.sync('./src/components/**/index.ts').map((file, i, arr) 
         include: componentPath + '/*.html',
         htmlMinifierOptions: {
           collapseWhitespace: true,
+          collapseInlineTagWhitespace: true,
           collapseBooleanAttributes: true,
-          conservativeCollapse: true,
           removeComments: true,
         },
       }),
