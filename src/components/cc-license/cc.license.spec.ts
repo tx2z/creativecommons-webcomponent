@@ -60,6 +60,22 @@ const checkIcon = (element: HTMLElement, iconSize: string, addAttr = true): void
   expect(image.getAttribute('src')).toContain(`${iconSize}.png`);
 };
 
+const checkTitleFormat = (element: HTMLElement, format: string, metaDataFormat: string): void => {
+  const title = 'The work';
+  const text = `<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title" href="${metaDataFormat}" rel="dct:type">${title}</span>`;
+  element.setAttribute('work-title', title);
+  element.setAttribute('format', format);
+  document.body.append(element);
+  expect(element.innerHTML.replace(/ |\n|\r/g, '')).toContain(text.replace(/ |\n|\r/g, ''));
+};
+
+const checkFormat = (element: HTMLElement, format: string, metaDataFormat: string): void => {
+  const text = `This <span href="${metaDataFormat}" rel="dct:type">work</span>`;
+  element.setAttribute('format', format);
+  document.body.append(element);
+  expect(element.innerHTML.replace(/ |\n|\r/g, '')).toContain(text.replace(/ |\n|\r/g, ''));
+};
+
 window.customElements.define('cc-license', CcLicense);
 describe('Creative Commons web component Spec:', () => {
   let element: HTMLElement;
@@ -129,20 +145,110 @@ describe('Creative Commons web component Spec:', () => {
     it('should have Compact Icon', () => {
       checkIcon(element, '80x15');
     });
-    /*
-    it('should work with optional Title of work', () => {});
-    it('should work without optional Title of work', () => {});
-    it('should work with optional Attribute work to name', () => {});
-    it('should work without optional Attribute work to name', () => {});
-    it('should work with optional Attribute work to URL', () => {});
-    it('should work without optional Attribute work to URL', () => {});
-    it('should work with optional Source work URL', () => {});
-    it('should work without optional Source work URL', () => {});
-    it('should work with optional More permissions URL', () => {});
-    it('should work without optional More permissions URL', () => {});
-    it('should work with optional Format of work', () => {});
-    it('should work without optional Format of work', () => {});
-    */
+    it('should work with optional More permissions URL', () => {
+      const url = 'http://jesus.perezpaz.es/morepermissions';
+      const text = `Permissions beyond the scope of this license may be available at
+      <a xmlns:cc="http://creativecommons.org/ns#" href="${url}" rel="cc:morePermissions">${url}</a>.`;
+      element.setAttribute('permissions', url);
+      document.body.append(element);
+      expect(element.innerHTML.replace(/ |\n|\r/g, '')).toContain(text.replace(/ |\n|\r/g, ''));
+    });
+    it('should work with optional Source work URL', () => {
+      const url = 'http://jesus.perezpaz.es/source';
+      const text = `Based on a work at 
+      <a xmlns:dct="http://purl.org/dc/terms/"href="${url}"rel="dct:source">${url}</a>.`;
+      element.setAttribute('source', url);
+      document.body.append(element);
+      expect(element.innerHTML.replace(/ |\n|\r/g, '')).toContain(text.replace(/ |\n|\r/g, ''));
+    });
+    it('should work with optional Title of work', () => {
+      const title = 'The work';
+      const text = `<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">${title}</span>`;
+      element.setAttribute('work-title', title);
+      document.body.append(element);
+      expect(element.innerHTML.replace(/ |\n|\r/g, '')).toContain(text.replace(/ |\n|\r/g, ''));
+    });
+    it('should work with optional Title of work && format "Audio"', () => {
+      const format = 'Audio';
+      const metaDataFormat = 'http://purl.org/dc/dcmitype/Sound';
+      checkTitleFormat(element, format, metaDataFormat);
+    });
+    it('should work with optional Title of work && format "Video"', () => {
+      const format = 'Video';
+      const metaDataFormat = 'http://purl.org/dc/dcmitype/MovingImage';
+      checkTitleFormat(element, format, metaDataFormat);
+    });
+    it('should work with optional Title of work && format "Text"', () => {
+      const format = 'Text';
+      const metaDataFormat = 'http://purl.org/dc/dcmitype/Text';
+      checkTitleFormat(element, format, metaDataFormat);
+    });
+    it('should work with optional Title of work && format "Dataset"', () => {
+      const format = 'Dataset';
+      const metaDataFormat = 'http://purl.org/dc/dcmitype/Dataset';
+      checkTitleFormat(element, format, metaDataFormat);
+    });
+    it('should work with optional Title of work && format "Interactive"', () => {
+      const format = 'Interactive';
+      const metaDataFormat = 'http://purl.org/dc/dcmitype/InteractiveResource';
+      checkTitleFormat(element, format, metaDataFormat);
+    });
+    it('should work with format "Audio" without Title of Work', () => {
+      const format = 'Audio';
+      const metaDataFormat = 'http://purl.org/dc/dcmitype/Sound';
+      checkFormat(element, format, metaDataFormat);
+    });
+    it('should work with format "Video" without Title of Work', () => {
+      const format = 'Video';
+      const metaDataFormat = 'http://purl.org/dc/dcmitype/MovingImage';
+      checkFormat(element, format, metaDataFormat);
+    });
+    it('should work with format "Text" without Title of Work', () => {
+      const format = 'Text';
+      const metaDataFormat = 'http://purl.org/dc/dcmitype/Text';
+      checkFormat(element, format, metaDataFormat);
+    });
+    it('should work with format "Dataset" without Title of Work', () => {
+      const format = 'Dataset';
+      const metaDataFormat = 'http://purl.org/dc/dcmitype/Dataset';
+      checkFormat(element, format, metaDataFormat);
+    });
+    it('should work with format "Interactive" without Title of Work', () => {
+      const format = 'Interactive';
+      const metaDataFormat = 'http://purl.org/dc/dcmitype/InteractiveResource';
+      checkFormat(element, format, metaDataFormat);
+    });
+    it('should work with optional Attribute work to name', () => {
+      const attribution = 'Jesus Pérez';
+      const text = `by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">${attribution}</span>`;
+      element.setAttribute('attribution-title', attribution);
+      document.body.append(element);
+      expect(element.innerHTML.replace(/ |\n|\r/g, '')).toContain(text.replace(/ |\n|\r/g, ''));
+    });
+    it('should work with optional Attribute work to URL', () => {
+      const attributionUrl = 'http://jesus.perezpaz.es';
+      const text = `by <a 
+        xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"
+        href="${attributionUrl}" 
+        rel="cc:attributionURL"
+      >${attributionUrl}</a>`;
+      element.setAttribute('attribution-url', attributionUrl);
+      document.body.append(element);
+      expect(element.innerHTML.replace(/ |\n|\r/g, '')).toContain(text.replace(/ |\n|\r/g, ''));
+    });
+    it('should work with optional Attributes work to name && work to URL', () => {
+      const attribution = 'Jesus Pérez';
+      const attributionUrl = 'http://jesus.perezpaz.es';
+      const text = `by <a 
+        xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"
+        href="${attributionUrl}" 
+        rel="cc:attributionURL"
+      >${attribution}</a>`;
+      element.setAttribute('attribution-title', attribution);
+      element.setAttribute('attribution-url', attributionUrl);
+      document.body.append(element);
+      expect(element.innerHTML.replace(/ |\n|\r/g, '')).toContain(text.replace(/ |\n|\r/g, ''));
+    });
   });
 
   afterEach(() => {

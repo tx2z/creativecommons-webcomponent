@@ -1,4 +1,11 @@
-import { Licenses, License, Adaptations, IconSize } from './cc.license.interfaces';
+import {
+  Licenses,
+  License,
+  LicenseMetadata,
+  Adaptations,
+  IconSize,
+  TemplateVariables,
+} from './cc.license.interfaces';
 import { prepareTemplate, attrToCamel } from '../../helpers';
 import * as htmlTemplate from './cc.license.html';
 import * as stylesheet from './cc.license.css';
@@ -9,8 +16,52 @@ export default class CcLicense extends HTMLElement {
     super();
   }
 
-  private componentAttributes: string[] = ['license', 'adaptations', 'commercial', 'icon'];
+  /**
+   * Allowed attributes that can be passed to the component.
+   */
+  private componentAttributes: string[] = [
+    'license',
+    'adaptations',
+    'commercial',
+    'icon',
+    'work-title',
+    'source',
+    'attribution-title',
+    'attribution-url',
+    'permissions',
+    'format',
+  ];
 
+  /**
+   * Available fields in license metadata.
+   */
+  private licenseMetadata: string[] = [
+    'workTitle',
+    'source',
+    'attributionTitle',
+    'attributionUrl',
+    'permissions',
+    'format',
+  ];
+
+  /**
+   * Available format to describes what kind of work is being licensed.
+   */
+  private formats = {
+    audio: 'http://purl.org/dc/dcmitype/Sound',
+    video: 'http://purl.org/dc/dcmitype/MovingImage',
+    image: 'http://purl.org/dc/dcmitype/StillImage',
+    text: 'http://purl.org/dc/dcmitype/Text',
+    dataset: 'http://purl.org/dc/dcmitype/Dataset',
+    interactive: 'http://purl.org/dc/dcmitype/InteractiveResource',
+  };
+
+  /**
+   * Get the correct license based on the license shortname.
+   * @param license - options: "by" (default if sting is not one of the availables)
+   *               | "by-nc" | "by-nc-nd" | "by-nc-sa" | "by-nd" | "by-sa"
+   * @param iconSize - The size of the icon. options: 88x31(default if null) | 80x15
+   */
   private getLicense(license: string, iconSize: string | null): License {
     let title: string;
     let imageHeight: number;
@@ -68,6 +119,12 @@ export default class CcLicense extends HTMLElement {
     };
   }
 
+  /**
+   * Choose the correct license based on the attributes pased to the element.
+   * @param adaptations - options: 'yes' | 'no' | 'share-alike'
+   * @param commercial
+   * @param icon
+   */
   private chooseLicense(
     adaptations: string | null,
     commercial: boolean,
@@ -100,6 +157,128 @@ export default class CcLicense extends HTMLElement {
   }
 
   /**
+   * Recover the license metadata from the attributes passed to the element
+   * @param attributes
+   */
+  private getMetadata(attributes: Record<string, string | null>): LicenseMetadata {
+    const metadata: LicenseMetadata = {};
+
+    this.licenseMetadata.forEach(dataAttribute => {
+      if (attributes[dataAttribute]) {
+        if (dataAttribute === 'format') {
+          const attrLowerCase = (attributes[dataAttribute] as string).toLowerCase();
+          metadata.format = this.formats[attrLowerCase];
+        } else {
+          metadata[dataAttribute] = attributes[dataAttribute];
+        }
+      }
+    });
+    return metadata;
+  }
+
+  /**
+   * Generate the license data based on the attributes of the element
+   * @param attributes
+   */
+  private generateLicense(attributes: Record<string, string | null>): License {
+    let license: License;
+
+    const icon = attributes.icon;
+
+    if (attributes.license) {
+      // If the attribute license is defined use it
+      license = this.getLicense(attributes.license, icon);
+    } else {
+      // If no attribute license try to build the license from other attributes
+      const adaptations: string | null = attributes.adaptations;
+      const commercial: boolean = attributes.commercial
+        ? // if commercial attribute exists transform to boolean
+          attributes.commercial === 'true'
+        : // if not return true
+          true;
+      license = this.chooseLicense(adaptations, commercial, icon);
+    }
+    // Get license metadata
+    const metadata = this.getMetadata(attributes);
+    if (Object.entries(metadata).length !== 0) {
+      license.metadata = metadata;
+    }
+    return license;
+  }
+
+  /**
+   * Generate the temaplte variables based on the license data
+   * @param license
+   */
+  private generateTemplateVariables(license: License): TemplateVariables {
+    const variables = {
+      url: license.url,
+      imageWidth: license.imageWidth,
+      imageHeight: license.imageHeight,
+      image: license.image,
+      title: license.title,
+      work: 'This work',
+      attribution: '',
+      source: '',
+      permissions: '',
+    };
+    // Put the correct title and format if defined
+    if (license.metadata?.workTitle || license.metadata?.format) {
+      let typeMetaData = '';
+      if (license.metadata?.format) {
+        typeMetaData = `href="${license.metadata.format}" rel="dct:type"`;
+      }
+      if (license.metadata?.workTitle) {
+        variables.work = `<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title" ${typeMetaData}>${license.metadata.workTitle}</span>`;
+      } else {
+        variables.work = `This <span ${typeMetaData}>work</span>`;
+      }
+    }
+    // Put the correct attribution data if defined
+    if (license.metadata?.attributionTitle || license.metadata?.attributionUrl) {
+      const attributionMetaData =
+        'xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName"';
+      if (license.metadata?.attributionUrl) {
+        variables.attribution = `
+        by
+        <a 
+          ${attributionMetaData}
+          href="${license.metadata.attributionUrl}" 
+          rel="cc:attributionURL"
+        >${license.metadata.attributionTitle || license.metadata.attributionUrl}</a>`;
+      } else {
+        variables.attribution = `
+        by
+        <span ${attributionMetaData}>${license.metadata.attributionTitle}</span>`;
+      }
+    }
+    // Put the correct source work if defined
+    if (license.metadata?.source) {
+      variables.source = `
+      <br />
+      Based on a work at 
+      <a 
+        xmlns:dct="http://purl.org/dc/terms/"
+        href="${license.metadata.source}"
+        rel="dct:source"
+      >${license.metadata.source}</a>.`;
+    }
+    // Put the correct permissions url if defined
+    if (license.metadata?.permissions) {
+      variables.permissions = `
+      <br />
+      Permissions beyond the scope of this license may be available at
+      <a 
+        xmlns:cc="http://creativecommons.org/ns#"
+        href="${license.metadata.permissions}"
+        rel="cc:morePermissions"
+      >${license.metadata.permissions}</a>.`;
+    }
+
+    return variables;
+  }
+
+  /**
    * Executed when the custom element is added to the page.
    */
   public connectedCallback(): void {
@@ -117,31 +296,17 @@ export default class CcLicense extends HTMLElement {
       const key = attrToCamel(attribute);
       attributes[key] = this.getAttribute(attribute);
     });
-    const icon = attributes.icon;
-    let license: License;
-    if (attributes.license) {
-      // If the attribute license is defined use it
-      license = this.getLicense(attributes.license, icon);
-    } else {
-      // If no attribute license try to build the license from other attributes
-      const adaptations: string | null = attributes.adaptations;
-      const commercial: boolean = attributes.commercial
-        ? // if commercial attribute exists transform to boolean
-          attributes.commercial === 'true'
-        : // if not return true
-          true;
-      license = this.chooseLicense(adaptations, commercial, icon);
-    }
+
+    // Generate the license date
+    const license = this.generateLicense(attributes);
+
+    // Generate the template variables based on the license data
+    const templateVariables = this.generateTemplateVariables(license);
+
     // Prepare template
-    templateElement.innerHTML += prepareTemplate(htmlTemplate.default, license, '');
+    templateElement.innerHTML += prepareTemplate(htmlTemplate.default, templateVariables, '');
 
     // Attach template content to the dom inside the element
     this.appendChild(templateElement.content.cloneNode(true));
-  }
-  /**
-   * Executed when the custom element is removed from page.
-   */
-  public disconnectedCallback(): void {
-    console.log('disconected!');
   }
 }
