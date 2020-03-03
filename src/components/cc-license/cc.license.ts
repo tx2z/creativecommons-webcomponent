@@ -10,7 +10,19 @@ import { prepareTemplate, attrToCamel } from '../../helpers';
 import * as htmlTemplate from './cc.license.html';
 import * as stylesheet from './cc.license.css';
 
-/** The Creative Commons web component */
+/**
+ * The Creative Commons web component
+ * @attr {'by' | 'by-nc' | 'by-nc-nd' | 'by-nc-sa' | 'by-nd' | 'by-sa'} license - Choose the license (overwrites adaptations & commercial)
+ * @attr {'yes' | 'no' | 'share-alike'} adaptations - Allow adaptations of your work to be shared?
+ * @attr {Boolean} commercial - Allow commercial uses of your work?
+ * @attr {'88x31' | '80x15'} icon - The icon size
+ * @attr {String} work-title - The title of the work you are licensing.
+ * @attr {String} source - The URL of the work upon which this work is based or derived.
+ * @attr {String} attribution-title - The name of the person who should receive attribution for the work. Most often, this is the author.
+ * @attr {String} attribution-url - The URL to which the work should be attributed.
+ * @attr {String} permissions - A URL where a user can find information about obtaining rights that are not already permitted by the CC license.
+ * @attr {'Sound' | 'MovingImage' | 'StillImage' | 'Text' | 'Dataset' | 'InteractiveResource'} format - This describes what kind of work is being licensed.
+ **/
 export default class CcLicense extends HTMLElement {
   constructor() {
     super();
