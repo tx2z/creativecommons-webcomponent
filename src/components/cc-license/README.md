@@ -29,7 +29,7 @@ Then use it in your html or js template
 ### Use it directly in your page
 
 ``` html
-<script src="ccLicense.dist.js"></script>
+<script src="https://unpkg.com/creative-commons-web-component/ccLicense.dist.js"></script>
 <cc-license [attributes?]></cc-license>
 ```
 
