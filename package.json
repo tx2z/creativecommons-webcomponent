@@ -1,7 +1,7 @@
 {
-  "name": "wc-base-typescript",
+  "name": "creative-commons-web-component-generator",
   "version": "1.0.0",
-  "description": "Project to create web components with typescript",
+  "description": "Creative Commons license generator as web component - Generated with wc-base-typescript, a project to create web components with typescript",
   "main": "index.js",
   "scripts": {
     "start": "rollup -c --watch",
@@ -13,24 +13,28 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/tx2z/creativecommons-webcomponent"
   },
+  "bugs": {
+    "url": "https://github.com/tx2z/creativecommons-webcomponent/issues"
+  },
+  "homepage": "https://github.com/tx2z/creativecommons-webcomponent",
   "author": "tx2z",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.8.4",
+    "@babel/core": "^7.8.7",
     "@rollup/plugin-commonjs": "^11.0.2",
     "@rollup/plugin-node-resolve": "^7.1.1",
-    "@storybook/addon-a11y": "^5.3.13",
-    "@storybook/addon-knobs": "^5.3.13",
-    "@storybook/addon-notes": "^5.3.13",
-    "@storybook/addon-viewport": "^5.3.13",
-    "@storybook/html": "^5.3.13",
-    "@types/jasmine": "^3.5.6",
-    "@types/node": "^13.7.4",
-    "@typescript-eslint/eslint-plugin": "^2.20.0",
-    "@typescript-eslint/parser": "^2.20.0",
-    "@wessberg/rollup-plugin-ts": "^1.2.17",
+    "@storybook/addon-a11y": "^5.3.14",
+    "@storybook/addon-knobs": "^5.3.14",
+    "@storybook/addon-notes": "^5.3.14",
+    "@storybook/addon-viewport": "^5.3.14",
+    "@storybook/html": "^5.3.14",
+    "@types/jasmine": "^3.5.7",
+    "@types/node": "^13.7.7",
+    "@typescript-eslint/eslint-plugin": "^2.22.0",
+    "@typescript-eslint/parser": "^2.22.0",
+    "@wessberg/rollup-plugin-ts": "^1.2.19",
     "babel-loader": "^8.0.6",
     "copy-webpack-plugin": "^5.1.1",
     "cssnano": "^4.1.10",
@@ -52,7 +56,7 @@
     "postcss-loader": "^3.0.0",
     "postcss-preset-env": "^6.7.0",
     "prettier": "^1.19.1",
-    "rollup": "^1.31.1",
+    "rollup": "^1.32.0",
     "rollup-plugin-clear": "^2.0.7",
     "rollup-plugin-copy": "^3.3.0",
     "rollup-plugin-eslint": "^7.0.0",
@@ -67,9 +71,9 @@
     "rollup-plugin-terser": "^5.2.0",
     "to-string-loader": "^1.1.6",
     "ts-loader": "^6.2.1",
-    "typescript": "^3.8.2"
+    "typescript": "^3.8.3"
   },
   "dependencies": {
-    "@webcomponents/webcomponentsjs": "^2.4.1"
+    "@webcomponents/webcomponentsjs": "^2.4.2"
   }
 }
