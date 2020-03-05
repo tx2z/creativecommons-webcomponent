@@ -21,7 +21,7 @@ import * as stylesheet from './cc.license.css';
  * @attr {String} attribution-title - The name of the person who should receive attribution for the work. Most often, this is the author.
  * @attr {String} attribution-url - The URL to which the work should be attributed.
  * @attr {String} permissions - A URL where a user can find information about obtaining rights that are not already permitted by the CC license.
- * @attr {'Sound' | 'MovingImage' | 'StillImage' | 'Text' | 'Dataset' | 'InteractiveResource'} format - This describes what kind of work is being licensed.
+ * @attr {'audio' | 'video' | 'image' | 'text' | 'dataset' | 'interactive'} format - Describes what kind of work is being licensed.
  **/
 export default class CcLicense extends HTMLElement {
   constructor() {
