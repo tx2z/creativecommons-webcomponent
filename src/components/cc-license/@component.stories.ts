@@ -2,7 +2,7 @@
 import { text, boolean, radios, select, withKnobs } from '@storybook/addon-knobs';
 import './index';
 
-import notes from './@component.notes.md';
+import notes from './README.md';
 
 export default {
   decorators: [withKnobs],

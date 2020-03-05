@@ -1,7 +1,6 @@
 {
-  "private": true,
   "name": "creative-commons-web-component",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Creative Commons license generator as web component",
   "author": "tx2z",
   "license": "ISC",

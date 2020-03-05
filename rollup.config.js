@@ -131,6 +131,14 @@ const components = glob.sync('./src/components/**/index.ts').map((file, i, arr) 
         outputFolder: componentPath.replace('src', outDir),
         baseContents: pkg,
       }),
+      copy({
+        targets: [
+          {
+            src: componentPath + '/README.md',
+            dest: componentPath.replace('src', outDir),
+          },
+        ],
+      }),
       filesize({
         showMinifiedSize: false,
       }),
