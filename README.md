@@ -8,11 +8,9 @@ Uses:
 
 * [typescript](https://www.typescriptlang.org/)
 * [rollup](https://rollupjs.org/)
-* [webcomponents polyfills](https://github.com/webcomponents/polyfills)
 * [karma](https://karma-runner.github.io/)
 * [jasmine](https://jasmine.github.io/)
-* [lit-html](https://lit-html.polymer-project.org/) (optional)
-* [storybook](https://storybook.js.org/) (optional)
+* [storybook](https://storybook.js.org/)
 
 ## Contribute
 
@@ -66,10 +64,8 @@ npm run storybook
 npm run build
 ```
 
-You can find your builds in the "dist" folder.
+You can find the builds in the "dist" folder.
 
-Your components will be compiled in a js file (as [ES module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)), to use them as modules in your application, and in a dist.js (as [iife](https://developer.mozilla.org/en-US/docs/Glossary/IIFE)), to use them directly in browsers, with the same name you give to the folder in "[src/components](src/components)".
+The component will be compiled in a js file (as [ES module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)), to use it as module in any application, and in a dist.js (as [iife](https://developer.mozilla.org/en-US/docs/Glossary/IIFE)), to use it directly in browsers, with the same name you give to the folder in "[src/components](src/components)".
 
 All modules include their respective [Typescript declaration files](https://www.typescriptlang.org/docs/handbook/declaration-files/introduction.html).
-
-The [webcomponents polyfills](https://github.com/webcomponents/polyfills) are included as well in the "dist" folder, so they can used or they can be loaded directly from a CDN such as unpkg: <https://unpkg.com/@webcomponents/webcomponentsjs@^2/>
