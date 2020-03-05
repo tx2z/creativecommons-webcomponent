@@ -1,6 +1,6 @@
 # Creative Commons Web Component Generator
 
-This is the repository that generate the code that is published in npm. To use the package check: [https://www.npmjs.com/package/creative-commons-web-component](https://www.npmjs.com/package/creative-commons-web-component).
+This is the repository that generate the code that is published in npm. To use the package check [his storybook](https://tx2z.github.io/creativecommons-webcomponent/) or [the package in the npm repository](https://www.npmjs.com/package/creative-commons-web-component).
 
 This project is created with [wc-base-typescript](https://github.com/tx2z/wc-base-typescript). A project to create isolated web components with typescript
 
